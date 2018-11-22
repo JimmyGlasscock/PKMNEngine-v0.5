@@ -22,7 +22,7 @@ import org.newdawn.slick.font.effects.ColorEffect;
 public class Main extends BasicGame{
 	//-------------TO DO-------------------
 	//Add a prompt when the user tries to shift out a fainted pokemon
-	//Fainted pkmn animations()turn white & grow/shrink
+	//make it so you can win/lose with any party size
 	
 	
 	//enemy AI, (different difficulties of it)
@@ -36,7 +36,7 @@ public class Main extends BasicGame{
 	Font UIFont, UIFont2, UIFont3;
 	UnicodeFont uniFont, uniFont2, uniFont3;
 	
-	String move1, move2, move3, move4, message = "", faintedMessage = "";
+	String move1, move2, move3, move4, message = "", faintedMessage = "Ligma";
 	
 	static int screenWidth = 1280, screenHeight = 720;
 	
@@ -56,7 +56,7 @@ public class Main extends BasicGame{
 
 	boolean increaseTwo = false, nextScreen = false, previousScreen = false, opponentFaintMessage = false;
 	
-	Image Title, Victory, Defeat, Trainer, pointer, PartyScreen, TeamBuilder, icon, icon2, icon3, icon4, icon5, icon6, icon7, icon8, icon9;
+	Image Title, Victory, Defeat, Trainer, pointer, PartyScreen, TeamBuilder, icon, icon2, icon3, icon4, icon5, icon6, icon7, icon8, icon9, fnt, fnt2, fnt3, fnt4, fnt5, fnt6;
 	
 	Image slotOne, slotTwo, slotThree, slotFour, slotFive, slotSix, blankRectangle, transition;
 	
@@ -185,6 +185,14 @@ public class Main extends BasicGame{
 		slotFour = new Image("res/pokeball.png");
 		slotFive = new Image("res/pokeball.png");
 		slotSix = new Image("res/pokeball.png");
+		
+		fnt = new Image("res/FNT.png");
+		fnt2 = new Image("res/FNT.png");
+		fnt3 = new Image("res/FNT.png");
+		fnt4 = new Image("res/FNT.png");
+		fnt5 = new Image("res/FNT.png");
+		fnt6 = new Image("res/FNT.png");
+		
 		
 		blankRectangle = new Image("res/blankRectangle.png");
 		
@@ -978,6 +986,11 @@ public class Main extends BasicGame{
 			
 			g.drawString("HP: "+ battleObj.getFromPlayerParty(0).getHP() + "/" + battleObj.getFromPlayerParty(0).getMaxHP(), 320, 130);
 			
+			if(battleObj.getFromPlayerParty(0).getStatus().equalsIgnoreCase("Fainted")) {
+				fnt.draw(420, 75);
+				g.drawString("FNT", 430, 70);
+			}
+			
 			if(i > 1) {
 				slotTwo.draw(780,40,2);
 				g.drawString(battleObj.getFromPlayerParty(1).getName(), 850, 75);
@@ -989,6 +1002,12 @@ public class Main extends BasicGame{
 				g.setColor(Color.white);
 				
 				g.drawString("HP: "+ battleObj.getFromPlayerParty(1).getHP() + "/" + battleObj.getFromPlayerParty(1).getMaxHP(), 1000, 130);
+				
+				if(battleObj.getFromPlayerParty(1).getStatus().equalsIgnoreCase("Fainted")) {
+					fnt2.draw(1100, 75);
+					g.drawString("FNT", 1110, 70);
+				}
+				
 			}
 			
 			if(i>2) {
@@ -1002,6 +1021,12 @@ public class Main extends BasicGame{
 				g.setColor(Color.white);
 				
 				g.drawString("HP: "+ battleObj.getFromPlayerParty(2).getHP() + "/" + battleObj.getFromPlayerParty(2).getMaxHP(), 320, 350);
+			
+				if(battleObj.getFromPlayerParty(2).getStatus().equalsIgnoreCase("Fainted")) {
+					fnt3.draw(420, 295);
+					g.drawString("FNT", 430, 290);
+				}
+			
 			}
 			
 			if(i>3) {
@@ -1015,6 +1040,12 @@ public class Main extends BasicGame{
 				g.setColor(Color.white);
 				
 				g.drawString("HP: "+ battleObj.getFromPlayerParty(3).getHP() + "/" + battleObj.getFromPlayerParty(3).getMaxHP(), 1000, 350);
+			
+				if(battleObj.getFromPlayerParty(3).getStatus().equalsIgnoreCase("Fainted")) {
+					fnt4.draw(1100, 295);
+					g.drawString("FNT", 1110, 290);
+				}
+				
 			}
 			
 			if(i>4) {
@@ -1028,6 +1059,12 @@ public class Main extends BasicGame{
 				g.setColor(Color.white);
 				
 				g.drawString("HP: "+ battleObj.getFromPlayerParty(4).getHP() + "/" + battleObj.getFromPlayerParty(4).getMaxHP(), 320, 555);
+		
+				if(battleObj.getFromPlayerParty(4).getStatus().equalsIgnoreCase("Fainted")) {
+					fnt5.draw(420, 500);
+					g.drawString("FNT", 430, 495);
+				}
+				
 			}
 			
 			if(i>5) {
@@ -1041,12 +1078,17 @@ public class Main extends BasicGame{
 				g.setColor(Color.white);
 				
 				g.drawString("HP: "+ battleObj.getFromPlayerParty(5).getHP() + "/" + battleObj.getFromPlayerParty(5).getMaxHP(), 1000, 555);
+			
+				if(battleObj.getFromPlayerParty(5).getStatus().equalsIgnoreCase("Fainted")) {
+					fnt6.draw(1100, 500);
+					g.drawString("FNT", 1110, 495);
+				}
+			
 			}
 			
 			if(popupText) {
 				Textbox.draw(60, 600);
 				
-				g.setFont(uniFont);
 				g.drawString(faintedMessage, 300, 650);
 			}
 			
@@ -1062,7 +1104,6 @@ public class Main extends BasicGame{
 			int MouseY = input.getMouseY();
 			
 			if(backButtonEnabled) {
-				//MAKE SURE YOU CAN ONLY PRESS IT ONCE!!!
 				if(input.isKeyPressed(Input.KEY_BACK)) {
 					choice = 0;
 					previousScreen = true;
@@ -1073,7 +1114,9 @@ public class Main extends BasicGame{
 				if(input.isMousePressed((Input.MOUSE_LEFT_BUTTON))) {
 					if(battleObj.Player.PlayerParty.get(0).getStatus().equalsIgnoreCase("Fainted")) {
 						//Popup that tells the player that <PKMN NAME> has no energy left to fight
-						noEnergyToFight(0);
+						popupText = true;
+						faintedMessage = "ligma";
+//						noEnergyToFight(0);
 					}else {
 						choice = 0;
 						currentPKMN = 0;
@@ -1248,8 +1291,7 @@ public class Main extends BasicGame{
 	}
 	
 	public void noEnergyToFight(int num) {
-		popupText = true;
-		while(popupText) {
+		if(popupText) {
 			String str = battleObj.Player.PlayerParty.get(num).getName() + " has no energy left to battle!";
 			if(faintedMessage.length() != str.length()) {
 				faintedMessage = battleObj.printMessage(battleObj.Player.PlayerParty.get(num).getName() + " has no energy left to battle!");
