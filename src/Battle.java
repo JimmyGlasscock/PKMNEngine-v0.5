@@ -1085,23 +1085,25 @@ public class Battle {
 	}
 	
 	public String printMessage(String message) {
-		if(messageDone) {
-			i = 1;
-			messageDone = false;
-		}
+//		if(messageDone) {
+//			i = 0;
+//			messageDone = false;
+//		}
 		String str = message.substring(0,i);
 		i++;
-		try {
-			Thread.sleep(textSpeed);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		sleep(textSpeed);
 		if(i>message.length()) {
 			messageDone = true;
 		}
 		return str;
+	}
+	
+	public void sleep(int time) {
+		try {
+			Thread.sleep(time);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	

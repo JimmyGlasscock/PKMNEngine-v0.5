@@ -46,13 +46,13 @@ public class Main extends BasicGame{
 	
 	int choice = 0, pointerX = 395, pointerY = 267, i = 0, PointX = 910, PointY = 600;
 	
-	int pkmnX = 180, pkmnY = 315, oppoX = 820, oppoY = 110, tempPKMN = 0;
+	int pkmnX = 180, pkmnY = 315, oppoX = 820, oppoY = 110, tempPKMN = 0, moveMessage = 0;
 	
 	float scale = 3.5f;
 	
 	boolean changeHP = true, setScale = true, PlayerVictory = false, OpponentVictory = false, backButtonEnabled = true, popupText = false;
 
-	boolean nextScreen = false, previousScreen = false;
+	boolean nextScreen = false, previousScreen = false, opponentFaintMessage = false;
 	
 	Image Title, pointer, PartyScreen, TeamBuilder, icon, icon2, icon3, icon4, icon5, icon6, icon7, icon8, icon9;
 	
@@ -632,6 +632,22 @@ public class Main extends BasicGame{
 				changeHP = true;
 			}
 			
+			//BROKEN
+//			if(opponentFaintMessage) {
+//					battleIndex = -1;
+//					
+//					String str = "Foe " + battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getName() + " Fainted!";
+//					message = str.substring(0,i);
+//					sleep(30);
+//					i++;
+//					
+//					if(i>str.length()) {
+//						currentOpponentPKMN++;
+//						battleIndex = 1;
+//						opponentFaintMessage = false;
+//					}	
+//			}
+			
 			if(battleObj.PokemonList.get(1).getGen().equals("Gen4")) {
 				if(setScale) {
 					pkmnX = 180;
@@ -651,6 +667,41 @@ public class Main extends BasicGame{
 					oppoY = 140;
 					scale = 4.0f;
 					setScale = false;
+				}
+			}
+			
+			if(battleIndex == 0) {
+				if(moveMessage == 1) {
+					resetText();
+					if(!battleObj.messageDone) {
+						message = battleObj.printMessage(battleObj.Player.PlayerParty.get(currentPKMN).getName() + " used " + battleObj.getFromPlayerParty(currentPKMN).getMove(0).getName() + "!");
+					}else {
+						moveMessage = 0;
+					}
+				}
+				if(moveMessage == 2) {
+					resetText();
+					if(!battleObj.messageDone) {
+						message = battleObj.printMessage(battleObj.Player.PlayerParty.get(currentPKMN).getName() + " used " + battleObj.getFromPlayerParty(currentPKMN).getMove(1).getName() + "!");
+					}else {
+						moveMessage = 0;
+					}
+				}
+				if(moveMessage == 3) {
+					resetText();
+					if(!battleObj.messageDone) {
+						message = battleObj.printMessage(battleObj.Player.PlayerParty.get(currentPKMN).getName() + " used " + battleObj.getFromPlayerParty(currentPKMN).getMove(2).getName() + "!");
+					}else {
+						moveMessage = 0;
+					}
+				}
+				if(moveMessage == 4) {
+					resetText();
+					if(!battleObj.messageDone) {
+						message = battleObj.printMessage(battleObj.Player.PlayerParty.get(currentPKMN).getName() + " used " + battleObj.getFromPlayerParty(currentPKMN).getMove(3).getName() + "!");
+					}else {
+						moveMessage = 0;
+					}
 				}
 			}
 			
@@ -716,11 +767,12 @@ public class Main extends BasicGame{
 			if((battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getHP()) <= 0) {
 				battleObj.Joey.EnemyParty.get(currentOpponentPKMN).setStatus("Fainted");
 				
+				//calls nothing right now, it's broken
+				opponentFaintMessage = true;	
+				
 				if((battleObj.Joey.EnemyParty.get(0).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(1).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(2).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(3).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(4).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(5).getStatus().equalsIgnoreCase("Fainted"))) {
 					PlayerVictory = true;
 					screenIndex = 4;
-				}else {
-					//ADD CODE FOR OPPONENT TO SWITCH PKMN HERE
 				}
 			}
 			
@@ -841,7 +893,7 @@ public class Main extends BasicGame{
 			}
 			if(choice == 0 && input.isKeyPressed(Input.KEY_ENTER)) {
 				battleIndex = 0; 
-				message = battleObj.printMessage(battleObj.Player.PlayerParty.get(currentPKMN).getName() + " used " + battleObj.getFromPlayerParty(currentPKMN).getMove(0).getName() + "!");
+				moveMessage = 1;
 				if(battleObj.Player.PlayerParty.get(currentPKMN).getMove(0).getMoveType().equalsIgnoreCase("Physical")) {
 					int damage = battleObj.calculateDamage(battleObj.Player.PlayerParty.get(currentPKMN).getLevel(), battleObj.Player.PlayerParty.get(currentPKMN).getAttackStat(), battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getDefenseStat(), battleObj.Player.PlayerParty.get(currentPKMN).getMove(0).getBaseDamage(), battleObj.Player.PlayerParty.get(currentPKMN).getMove(0).getType(), battleObj.Player.PlayerParty.get(currentPKMN).getTypeOne(), battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getTypeOne(), battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getTypeTwo(), battleObj.Player.PlayerParty.get(currentPKMN).getStatus());
 					int hp = battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getHP();
@@ -854,6 +906,10 @@ public class Main extends BasicGame{
 					battleObj.Joey.EnemyParty.get(currentOpponentPKMN).setHP(hp - damage);
 					changeHP = true;
 				}
+				
+				//Enemy attack function call
+				
+				battleIndex = 1;
 			}
 		}
 	}
@@ -1104,5 +1160,12 @@ public class Main extends BasicGame{
 		battleObj.messageDone = false;
 	}
 	
+	public void sleep(int time) {
+		try {
+			Thread.sleep(time);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 }
 
