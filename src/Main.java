@@ -22,8 +22,7 @@ import org.newdawn.slick.font.effects.ColorEffect;
 public class Main extends BasicGame{
 	//-------------TO DO-------------------
 	//Add a prompt when the user tries to shift out a fainted pokemon
-	//make it so you can win/lose with any party size
-	
+	//make it so you can win/lose to any party size
 	
 	//enemy AI, (different difficulties of it)
 	//Make it so PKMN Stats are generated when you click on the PKMN, not just once at the start
@@ -610,8 +609,8 @@ public class Main extends BasicGame{
 								
 				g.drawString(move1, 930, 610);
 				g.drawString(move2, 930, 660);
-				g.drawString(move3, 1060, 610);
-				g.drawString(move4, 1060, 660);
+				g.drawString(move3, 1095, 610);
+				g.drawString(move4, 1095, 660);
 				
 				pointer2.draw(PointX, PointY);
 			}
@@ -934,11 +933,11 @@ public class Main extends BasicGame{
 				PointY = 660;
 			}
 			if(choice == 2) {
-				PointX = 1030;
+				PointX = 1070;
 				PointY = 610;
 			}
 			if(choice == 3) {
-				PointX = 1030;
+				PointX = 1070;
 				PointY = 660;
 			}
 			if(input.isKeyPressed(Input.KEY_BACK)) {
