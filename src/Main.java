@@ -22,9 +22,13 @@ import org.newdawn.slick.font.effects.ColorEffect;
 public class Main extends BasicGame{
 	//-------------TO DO-------------------
 	//Add a prompt when the user tries to shift out a fainted pokemon
+	//Fainted pkmn animations()turn white & grow/shrink
+	
+	
 	//enemy AI, (different difficulties of it)
 	//Make it so PKMN Stats are generated when you click on the PKMN, not just once at the start
 	//Add moves to all pokemon
+	//move animations
 	//Add different music tracks
 	
 	Battle battleObj = new Battle();
