@@ -22,8 +22,6 @@ import org.newdawn.slick.font.effects.ColorEffect;
 public class Main extends BasicGame{
 	//-------------TO DO-------------------
 	//Add a prompt when the user tries to shift out a fainted pokemon
-	//Add text scrolling effect
-	//add text scrolling when pkmn use moves, get hurt, faint, etc
 	//enemy AI, (different difficulties of it)
 	//Make it so PKMN Stats are generated when you click on the PKMN, not just once at the start
 	//Add moves to all pokemon
@@ -34,11 +32,11 @@ public class Main extends BasicGame{
 	Font UIFont, UIFont2, UIFont3;
 	UnicodeFont uniFont, uniFont2, uniFont3;
 	
-	String move1, move2, move3, move4, message = "";
+	String move1, move2, move3, move4, message = "", faintedMessage = "";
 	
 	static int screenWidth = 1280, screenHeight = 720;
 	
-	int listNum = 1, partySize = 0, currentPKMN = 0, currentOpponentPKMN = 0, battleIndex = 1, alpha = 0, q = 0;
+	int trainerNum = 0, listNum = 1, partySize = 0, currentPKMN = 0, currentOpponentPKMN = 0, battleIndex = 1, alpha = 0, q = 0;
 	
 	int screenIndex = 0, trainerIndex = 0, PlayerHPNum = 192, OpponentHPNum = 192;
 	
@@ -50,11 +48,11 @@ public class Main extends BasicGame{
 	
 	float scale = 3.5f;
 	
-	boolean changeHP = true, setScale = true, PlayerVictory = false, OpponentVictory = false, backButtonEnabled = true, popupText = false;
+	boolean changeHP = true, changeEnemyHP = true, setScale = true, PlayerVictory = false, OpponentVictory = false, backButtonEnabled = true, popupText = false;
 
-	boolean nextScreen = false, previousScreen = false, opponentFaintMessage = false;
+	boolean increaseTwo = false, nextScreen = false, previousScreen = false, opponentFaintMessage = false;
 	
-	Image Title, pointer, PartyScreen, TeamBuilder, icon, icon2, icon3, icon4, icon5, icon6, icon7, icon8, icon9;
+	Image Title, Victory, Defeat, Trainer, pointer, PartyScreen, TeamBuilder, icon, icon2, icon3, icon4, icon5, icon6, icon7, icon8, icon9;
 	
 	Image slotOne, slotTwo, slotThree, slotFour, slotFive, slotSix, blankRectangle, transition;
 	
@@ -92,8 +90,14 @@ public class Main extends BasicGame{
 		drawTeamBuilder(g);
 		drawBattle(g);
 		drawParty(g);
+		drawVictory(g);
+		drawLoss(g);
+		
+		//test case
+		//g.drawString("battleIndex: " + battleIndex, 10, 10);
 		
 		//always last (transitions)
+		increaseTwoScreenIndex(g);
 		increaseScreenIndex(g);
 		decreaseScreenIndex(g);
 	}
@@ -154,6 +158,12 @@ public class Main extends BasicGame{
 		transition = new Image("res/Transition.png");
 		
 		TeamBuilder = new Image("res/TeamBuilder.png");
+		
+		Victory = new Image("res/VictoryScreen.png");
+		
+		Defeat = new Image("res/DefeatScreen.png");
+		
+		Trainer = new Image("res/Gen4/Trainers/" + trainerNum + ".png");
 		
 		icon = battleObj.PokemonList.get(listNum).getIcon();
 		icon2 = battleObj.PokemonList.get(listNum+1).getIcon();
@@ -670,6 +680,34 @@ public class Main extends BasicGame{
 				}
 			}
 			
+			if(battleIndex == -2) {
+				String str = "Opponent sent out " + battleObj.Joey.EnemyParty.get(currentOpponentPKMN+1).getName() +"!";
+				if(message.length() != str.length()) {
+					message = battleObj.printMessage("Opponent sent out " + battleObj.Joey.EnemyParty.get(currentOpponentPKMN+1).getName() +"!");
+				}else {
+					battleObj.sleep(500);
+					currentOpponentPKMN++;
+					battleIndex = 1;
+				}
+			}
+			
+			if(battleIndex == -1) {
+					String str = "Foe " + battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getName() + " Fainted!";
+					if(message.length() != str.length()) {
+						message = battleObj.printMessage("Foe " + battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getName() + " Fainted!");
+					}else{
+						//you need to check party size to avoid out of bounds with less than 6
+						if((battleObj.Joey.EnemyParty.get(0).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(1).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(2).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(3).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(4).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(5).getStatus().equalsIgnoreCase("Fainted"))) {
+							PlayerVictory = true;
+							increaseTwo = true;
+						}else {
+							battleObj.sleep(500);
+							battleIndex--;
+						}
+						
+					}					
+				}
+			
 			if(battleIndex == 0) {
 				if(moveMessage == 1) {
 					String str = battleObj.Player.PlayerParty.get(currentPKMN).getName() + " used " + battleObj.getFromPlayerParty(currentPKMN).getMove(0).getName() + "!";
@@ -682,26 +720,32 @@ public class Main extends BasicGame{
 					}
 				}
 				if(moveMessage == 2) {
-					resetText();
-					if(!battleObj.messageDone) {
+					String str = battleObj.Player.PlayerParty.get(currentPKMN).getName() + " used " + battleObj.getFromPlayerParty(currentPKMN).getMove(1).getName() + "!";
+					if(message.length() != str.length()) {
 						message = battleObj.printMessage(battleObj.Player.PlayerParty.get(currentPKMN).getName() + " used " + battleObj.getFromPlayerParty(currentPKMN).getMove(1).getName() + "!");
 					}else {
+						battleObj.sleep(500);
+						battleIndex = 1;
 						moveMessage = 0;
 					}
 				}
 				if(moveMessage == 3) {
-					resetText();
-					if(!battleObj.messageDone) {
+					String str = battleObj.Player.PlayerParty.get(currentPKMN).getName() + " used " + battleObj.getFromPlayerParty(currentPKMN).getMove(2).getName() + "!";
+					if(message.length() != str.length()) {
 						message = battleObj.printMessage(battleObj.Player.PlayerParty.get(currentPKMN).getName() + " used " + battleObj.getFromPlayerParty(currentPKMN).getMove(2).getName() + "!");
 					}else {
+						battleObj.sleep(500);
+						battleIndex = 1;
 						moveMessage = 0;
 					}
 				}
 				if(moveMessage == 4) {
-					resetText();
-					if(!battleObj.messageDone) {
+					String str = battleObj.Player.PlayerParty.get(currentPKMN).getName() + " used " + battleObj.getFromPlayerParty(currentPKMN).getMove(3).getName() + "!";
+					if(message.length() != str.length()) {
 						message = battleObj.printMessage(battleObj.Player.PlayerParty.get(currentPKMN).getName() + " used " + battleObj.getFromPlayerParty(currentPKMN).getMove(3).getName() + "!");
 					}else {
+						battleObj.sleep(500);
+						battleIndex = 1;
 						moveMessage = 0;
 					}
 				}
@@ -720,9 +764,12 @@ public class Main extends BasicGame{
 			
 			if(PlayerProportion != 1) {
 				if(changeHP) {
-					PlayerHPNum = 192;
-					PlayerHPNum = (int) (PlayerHPNum * PlayerProportion);
-					changeHP = false;
+					int hpleft = (int) (PlayerHPNum * PlayerProportion);
+					if(PlayerHPNum != hpleft) {
+						PlayerHPNum--;
+					}else {
+						changeHP = false;
+					}
 				}
 			}
 			if(PlayerProportion == 1) {
@@ -733,10 +780,10 @@ public class Main extends BasicGame{
 			OpponentProportion = (double) battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getHP() / (double) battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getMaxHP();
 			
 			if(OpponentProportion != 1) {
-				if(changeHP) {
+				if(changeEnemyHP) {
 					OpponentHPNum = 192;
 					OpponentHPNum = (int) (OpponentHPNum * OpponentProportion);
-					changeHP = false;
+					changeEnemyHP = false;
 				}
 			}
 			if(PlayerProportion == 1) {
@@ -766,13 +813,8 @@ public class Main extends BasicGame{
 			//sets status to fainted if HP < 0
 			if((battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getHP()) <= 0) {
 				battleObj.Joey.EnemyParty.get(currentOpponentPKMN).setStatus("Fainted");
-				
-				//calls nothing right now, it's broken
-				opponentFaintMessage = true;	
-				
-				if((battleObj.Joey.EnemyParty.get(0).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(1).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(2).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(3).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(4).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(5).getStatus().equalsIgnoreCase("Fainted"))) {
-					PlayerVictory = true;
-					screenIndex = 4;
+				if(battleIndex == 0) {
+					battleIndex = -1;
 				}
 			}
 			
@@ -897,14 +939,14 @@ public class Main extends BasicGame{
 				if(battleObj.Player.PlayerParty.get(currentPKMN).getMove(0).getMoveType().equalsIgnoreCase("Physical")) {
 					int damage = battleObj.calculateDamage(battleObj.Player.PlayerParty.get(currentPKMN).getLevel(), battleObj.Player.PlayerParty.get(currentPKMN).getAttackStat(), battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getDefenseStat(), battleObj.Player.PlayerParty.get(currentPKMN).getMove(0).getBaseDamage(), battleObj.Player.PlayerParty.get(currentPKMN).getMove(0).getType(), battleObj.Player.PlayerParty.get(currentPKMN).getTypeOne(), battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getTypeOne(), battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getTypeTwo(), battleObj.Player.PlayerParty.get(currentPKMN).getStatus());
 					int hp = battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getHP();
-					battleObj.Joey.EnemyParty.get(currentOpponentPKMN).setHP(hp - damage);
-					changeHP = true;
+					battleObj.Joey.EnemyParty.get(currentOpponentPKMN).setHP(hp - 200);
+					changeEnemyHP = true;
 				}
 				if(battleObj.Player.PlayerParty.get(currentPKMN).getMove(0).getMoveType().equalsIgnoreCase("Special")) {
 					int damage = battleObj.calculateDamage(battleObj.Player.PlayerParty.get(currentPKMN).getLevel(), battleObj.Player.PlayerParty.get(currentPKMN).getSpecialAttackStat(), battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getSpecialDefenseStat(), battleObj.Player.PlayerParty.get(currentPKMN).getMove(0).getBaseDamage(), battleObj.Player.PlayerParty.get(currentPKMN).getMove(0).getType(), battleObj.Player.PlayerParty.get(currentPKMN).getTypeOne(), battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getTypeOne(), battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getTypeTwo(), battleObj.Player.PlayerParty.get(currentPKMN).getStatus());
 					int hp = battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getHP();
-					battleObj.Joey.EnemyParty.get(currentOpponentPKMN).setHP(hp - damage);
-					changeHP = true;
+					battleObj.Joey.EnemyParty.get(currentOpponentPKMN).setHP(hp - 200);
+					changeEnemyHP = true;
 				}
 				
 				//Enemy attack function call
@@ -916,6 +958,7 @@ public class Main extends BasicGame{
 	public void drawParty(Graphics g) {
 		if(screenIndex == 3) {
 			
+			//should be set to unifont2 (white Text)
 			g.setFont(uniFont2);
 			
 			PartyScreen.draw(0,0);
@@ -995,6 +1038,14 @@ public class Main extends BasicGame{
 				
 				g.drawString("HP: "+ battleObj.getFromPlayerParty(5).getHP() + "/" + battleObj.getFromPlayerParty(5).getMaxHP(), 1000, 555);
 			}
+			
+			if(popupText) {
+				Textbox.draw(60, 600);
+				
+				g.setFont(uniFont);
+				g.drawString(faintedMessage, 300, 650);
+			}
+			
 		}
 	}
 	
@@ -1007,6 +1058,7 @@ public class Main extends BasicGame{
 			int MouseY = input.getMouseY();
 			
 			if(backButtonEnabled) {
+				//MAKE SURE YOU CAN ONLY PRESS IT ONCE!!!
 				if(input.isKeyPressed(Input.KEY_BACK)) {
 					choice = 0;
 					previousScreen = true;
@@ -1017,6 +1069,7 @@ public class Main extends BasicGame{
 				if(input.isMousePressed((Input.MOUSE_LEFT_BUTTON))) {
 					if(battleObj.Player.PlayerParty.get(0).getStatus().equalsIgnoreCase("Fainted")) {
 						//Popup that tells the player that <PKMN NAME> has no energy left to fight
+						noEnergyToFight(0);
 					}else {
 						choice = 0;
 						currentPKMN = 0;
@@ -1107,8 +1160,34 @@ public class Main extends BasicGame{
 		return color;
 	}
 	
+	public void increaseTwoScreenIndex(Graphics g) {
+		if(increaseTwo) {
+			backButtonEnabled = false;
+			transition.draw(0, 0, new Color(255,255,255,alpha));
+			if(q == 0) {
+				if(alpha<255) {
+					alpha+=15;
+					if(alpha>254) {
+						screenIndex = 4;
+						q++;
+					}
+				}
+			}if(q==1) {
+				if(alpha>0) {
+					alpha-=15;
+				}else {
+					alpha = 0;
+					q=0;
+					backButtonEnabled = true;
+					increaseTwo = false;
+				}
+			}
+		}
+	}
+	
 	public void increaseScreenIndex(Graphics g) {
 		if(nextScreen) {
+			backButtonEnabled = false;
 			transition.draw(0, 0, new Color(255,255,255,alpha));
 			if(q == 0) {
 				if(alpha<255) {
@@ -1124,6 +1203,7 @@ public class Main extends BasicGame{
 				}else {
 					alpha = 0;
 					q=0;
+					backButtonEnabled = true;
 					nextScreen = false;
 				}
 			}
@@ -1132,6 +1212,7 @@ public class Main extends BasicGame{
 	
 	public void decreaseScreenIndex(Graphics g) {
 		if(previousScreen) {
+			backButtonEnabled = false;
 			transition.draw(0, 0, new Color(255,255,255,alpha));
 			if(q == 0) {
 				if(alpha<255) {
@@ -1147,23 +1228,161 @@ public class Main extends BasicGame{
 				}else {
 					alpha = 0;
 					q=0;
+					backButtonEnabled = true;
 					previousScreen = false;
 				}
 			}
 		}
 	}
-	
-	public void resetText() {
-		//resets text scroll
-		battleObj.i = 0;
-		battleObj.messageDone = false;
-	}
-	
+		
 	public void sleep(int time) {
 		try {
 			Thread.sleep(time);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public void noEnergyToFight(int num) {
+		popupText = true;
+		while(popupText) {
+			String str = battleObj.Player.PlayerParty.get(num).getName() + " has no energy left to battle!";
+			if(faintedMessage.length() != str.length()) {
+				faintedMessage = battleObj.printMessage(battleObj.Player.PlayerParty.get(num).getName() + " has no energy left to battle!");
+			}else {
+				battleObj.sleep(500);
+				popupText = false;
+			}
+		}
+	}
+	
+	public void drawVictory(Graphics g){
+		if(screenIndex == 4) {
+			Victory.draw(0,0);
+			
+			Trainer.draw(100,90, scale);
+			
+			if(i>0) {
+				if(battleObj.Player.PlayerParty.get(0).getStatus().equalsIgnoreCase("Fainted")) {
+					try {
+						battleObj.Player.getPokemonFromParty(0).getScaledFrontSprite().drawFlash(270, 90, 280, 280, Color.black);
+					} catch (SlickException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				}else {
+					try {
+						battleObj.Player.getPokemonFromParty(0).getFrontSprite().draw(270, 90, scale);
+					} catch (SlickException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+				
+				if(i>1) {
+					if(battleObj.Player.PlayerParty.get(1).getStatus().equalsIgnoreCase("Fainted")) {
+						try {
+							battleObj.Player.getPokemonFromParty(1).getScaledFrontSprite().drawFlash(550, 90, 280, 280, Color.black);
+						} catch (SlickException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+					}else {
+						try {
+							battleObj.Player.getPokemonFromParty(1).getFrontSprite().draw(550, 90, scale);
+						} catch (SlickException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+				
+				if(i>2) {
+					if(battleObj.Player.PlayerParty.get(2).getStatus().equalsIgnoreCase("Fainted")) {
+						try {
+							battleObj.Player.getPokemonFromParty(2).getScaledFrontSprite().drawFlash(830, 90, 280, 280, Color.black);
+						} catch (SlickException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+					}else {
+						try {
+							battleObj.Player.getPokemonFromParty(2).getFrontSprite().draw(830, 90, scale);
+						} catch (SlickException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+				
+				if(i>3) {
+					if(battleObj.Player.PlayerParty.get(3).getStatus().equalsIgnoreCase("Fainted")) {
+						try {
+							battleObj.Player.getPokemonFromParty(3).getScaledFrontSprite().drawFlash(270, 370, 280, 280, Color.black);
+						} catch (SlickException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+					}else {
+						try {
+							battleObj.Player.getPokemonFromParty(3).getFrontSprite().draw(270, 370, scale);
+						} catch (SlickException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+				
+				if(i>4) {
+					if(battleObj.Player.PlayerParty.get(4).getStatus().equalsIgnoreCase("Fainted")) {
+						try {
+							battleObj.Player.getPokemonFromParty(4).getScaledFrontSprite().drawFlash(550, 370, 280, 280, Color.black);
+						} catch (SlickException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+					}else {
+						try {
+							battleObj.Player.getPokemonFromParty(4).getFrontSprite().draw(550, 370, scale);
+						} catch (SlickException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+				
+				if(i>5) {
+					if(battleObj.Player.PlayerParty.get(5).getStatus().equalsIgnoreCase("Fainted")) {
+						try {
+							battleObj.Player.getPokemonFromParty(5).getScaledFrontSprite().drawFlash(830, 370, 280, 280, Color.black);
+						} catch (SlickException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+					}else {
+						try {
+							battleObj.Player.getPokemonFromParty(5).getFrontSprite().draw(830, 370, scale);
+						} catch (SlickException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	public void drawLoss(Graphics g) {
+		if(screenIndex == 5) {
+			Defeat.draw(0,0);
+			
+			//FINISH ME
 		}
 	}
 }

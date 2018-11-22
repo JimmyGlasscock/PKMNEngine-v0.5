@@ -72,6 +72,11 @@ public class Pokemon {
 		return frontSprite;
 	}
 	
+	public Image getScaledFrontSprite() throws SlickException {
+		Image frontSprite = new Image("res/" + gen + "/" + name + ".png");
+		return frontSprite.getScaledCopy(3.5f);
+	}
+	
 	public Image getBackSprite() throws SlickException {
 		Image backSprite = new Image("res/" + gen + "/Back/" + name + ".png");
 		return backSprite;
