@@ -831,13 +831,60 @@ public class Main extends BasicGame{
 			
 			if(battleObj.Player.PlayerParty.get(currentPKMN).getHP() <= 0) {
 				battleObj.Player.PlayerParty.get(currentPKMN).setStatus("Fainted");
-								
-				if((battleObj.Player.PlayerParty.get(0).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(1).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(2).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(3).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(4).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(5).getStatus().equalsIgnoreCase("Fainted"))) {
-					OpponentVictory = true;
-					screenIndex = 5;
-				}else {
-					backButtonEnabled = false;
-					screenIndex = 3;
+				if(i==1) {
+					if((battleObj.Player.PlayerParty.get(0).getStatus().equalsIgnoreCase("Fainted"))) {
+						OpponentVictory = true;
+						screenIndex = 5;
+					}else {
+						backButtonEnabled = false;
+						nextScreen = true;
+					}
+				}
+				if(i==2) {
+					if((battleObj.Player.PlayerParty.get(0).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(1).getStatus().equalsIgnoreCase("Fainted"))) {
+						OpponentVictory = true;
+						screenIndex = 5;
+					}else {
+						backButtonEnabled = false;
+						nextScreen = true;
+					}
+				}
+				if(i==3) {
+					if((battleObj.Player.PlayerParty.get(0).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(1).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(2).getStatus().equalsIgnoreCase("Fainted"))) {
+						OpponentVictory = true;
+						screenIndex = 5;
+					}else {
+						backButtonEnabled = false;
+						nextScreen = true;
+					}
+				}
+				if(i==4) {
+					if((battleObj.Player.PlayerParty.get(0).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(1).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(2).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(3).getStatus().equalsIgnoreCase("Fainted"))) {
+						OpponentVictory = true;
+						screenIndex = 5;
+					}else {
+						backButtonEnabled = false;
+						nextScreen = true;
+					}
+				}
+				if(i==5) {
+					if((battleObj.Player.PlayerParty.get(0).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(1).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(2).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(3).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(4).getStatus().equalsIgnoreCase("Fainted"))) {
+						OpponentVictory = true;
+						screenIndex = 5;
+					}else {
+						backButtonEnabled = false;
+						nextScreen = true;
+					}
+				}
+				
+				if(i>5) {
+					if((battleObj.Player.PlayerParty.get(0).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(1).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(2).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(3).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(4).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(5).getStatus().equalsIgnoreCase("Fainted"))) {
+						OpponentVictory = true;
+						screenIndex = 5;
+					}else {
+						backButtonEnabled = false;
+						nextScreen = true;
+					}
 				}
 				
 			}
@@ -1301,6 +1348,7 @@ public class Main extends BasicGame{
 		}
 	}
 	
+	
 	public void drawVictory(Graphics g){
 		if(screenIndex == 4) {
 			Victory.draw(0,0);
@@ -1423,10 +1471,30 @@ public class Main extends BasicGame{
 		}
 	}
 	
-	public void drawLoss(Graphics g) {
+    public void drawLoss(Graphics g) {
 		if(screenIndex == 5) {
 			Defeat.draw(0,0);
 			
+			try {
+				battleObj.Player.getPokemonFromParty(0).getScaledFrontSprite().drawFlash(270, 90, 280, 280, Color.black);
+				if(i>1) {
+					battleObj.Player.getPokemonFromParty(1).getScaledFrontSprite().drawFlash(550, 90, 280, 280, Color.black);
+				}
+				if(i>2) {
+					battleObj.Player.getPokemonFromParty(2).getScaledFrontSprite().drawFlash(830, 90, 280, 280, Color.black);
+				}
+				if(i>3) {
+					battleObj.Player.getPokemonFromParty(3).getScaledFrontSprite().drawFlash(270, 370, 280, 280, Color.black);
+				}
+				if(i>4) {
+					battleObj.Player.getPokemonFromParty(4).getScaledFrontSprite().drawFlash(550, 370, 280, 280, Color.black);
+				}
+				if(i>5) {
+					battleObj.Player.getPokemonFromParty(5).getScaledFrontSprite().drawFlash(830, 370, 280, 280, Color.black);
+				}
+			} catch (SlickException e) {
+				e.printStackTrace();
+			}
 			//FINISH ME
 		}
 	}
