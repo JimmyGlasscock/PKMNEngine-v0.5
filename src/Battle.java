@@ -13,6 +13,7 @@ public class Battle {
 	double typeEffectiveness = 1;
 	
 	int i = 0;
+	int j = 0;
 	int textSpeed = 35;
 	boolean messageDone = false;
 	
@@ -1085,16 +1086,22 @@ public class Battle {
 	}
 	
 	public String printMessage(String message) {
-//		if(messageDone) {
-//			i = 0;
-//			messageDone = false;
-//		}
+		
+		int k = j;
+		
 		String str = message.substring(0,i);
-		i++;
-		sleep(textSpeed);
-		if(i>message.length()) {
-			messageDone = true;
+		
+		if(i==message.length()) {
+			j++;
+		}else {
+			i++;
+			sleep(textSpeed);
 		}
+		
+		if(k!=j) {
+			i = 0;
+		}
+		
 		return str;
 	}
 	

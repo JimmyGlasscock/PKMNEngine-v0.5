@@ -672,10 +672,12 @@ public class Main extends BasicGame{
 			
 			if(battleIndex == 0) {
 				if(moveMessage == 1) {
-					resetText();
-					if(!battleObj.messageDone) {
+					String str = battleObj.Player.PlayerParty.get(currentPKMN).getName() + " used " + battleObj.getFromPlayerParty(currentPKMN).getMove(0).getName() + "!";
+					if(message.length() != str.length()) {
 						message = battleObj.printMessage(battleObj.Player.PlayerParty.get(currentPKMN).getName() + " used " + battleObj.getFromPlayerParty(currentPKMN).getMove(0).getName() + "!");
 					}else {
+						battleObj.sleep(500);
+						battleIndex = 1;
 						moveMessage = 0;
 					}
 				}
@@ -706,13 +708,11 @@ public class Main extends BasicGame{
 			}
 			
 			if(battleIndex == 1) {
-				if(!battleObj.messageDone) {
+				String str = "What will " + battleObj.Player.PlayerParty.get(currentPKMN).getName() + " Do?";
+				if(message.length() != str.length()) {
 					message = battleObj.printMessage("What will " + battleObj.Player.PlayerParty.get(currentPKMN).getName() + " Do?");
-					tempPKMN = currentPKMN;
 				}
-				if(tempPKMN != currentPKMN) {
-					resetText();
-				}
+			
 			}
 			
 			//sets hp proportion
@@ -909,7 +909,6 @@ public class Main extends BasicGame{
 				
 				//Enemy attack function call
 				
-				battleIndex = 1;
 			}
 		}
 	}
