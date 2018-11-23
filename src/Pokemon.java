@@ -23,6 +23,8 @@ public class Pokemon {
 	int SpecialDefense;
 	int Speed;
 	
+	int isShiny;
+	
 	boolean hasMoves = false;
 	
 	String status = " ";
@@ -39,6 +41,8 @@ public class Pokemon {
 		name = name2;
 		type = newtype;
 		level = newlevel;
+		
+		isShiny = (((int)(Math.random() * 4096))+1);
 		
 		HP = calculateHP(baseHP, newlevel);
 		MaxHP = HP;
@@ -58,6 +62,8 @@ public class Pokemon {
 		type2 = newtype2;
 		level = newlevel;
 		
+		isShiny = (((int)(Math.random() * 4096))+1);
+		
 		HP = calculateHP(baseHP, newlevel);
 		MaxHP = HP;
 		Attack = calculateOtherStat(baseAttack, newlevel);
@@ -68,7 +74,12 @@ public class Pokemon {
 	}
 	
 	public Image getFrontSprite() throws SlickException {
-		Image frontSprite = new Image("res/" + gen + "/" + name + ".png");
+		Image frontSprite;
+		if(isShiny==4096) {
+			frontSprite = new Image("res/" + gen + "/Shiny/" + name + ".png");
+		}else {
+			frontSprite = new Image("res/" + gen + "/" + name + ".png");
+		}
 		return frontSprite;
 	}
 	
@@ -78,7 +89,12 @@ public class Pokemon {
 	}
 	
 	public Image getBackSprite() throws SlickException {
-		Image backSprite = new Image("res/" + gen + "/Back/" + name + ".png");
+		Image backSprite;
+		if(isShiny == 4096) {
+			backSprite = new Image("res/" + gen + "/ShinyBack/" + name + ".png");
+		}else {
+			backSprite = new Image("res/" + gen + "/Back/" + name + ".png");
+		}
 		return backSprite;
 	}
 	

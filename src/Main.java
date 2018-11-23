@@ -97,7 +97,8 @@ public class Main extends BasicGame{
 		drawLoss(g);
 		
 		//test case
-		//g.drawString("battleIndex: " + battleIndex, 10, 10);
+		//g.drawString("isShiny: " + battleObj.PokemonList.get(0).isShiny, 10, 0);
+
 		
 		//always last (transitions)
 		increaseTwoScreenIndex(g);
@@ -1140,9 +1141,7 @@ public class Main extends BasicGame{
 			
 		}
 	}
-	
 
-	
 	public void partyScreenInstructions(GameContainer container) {
 		if(screenIndex == 3) {
 			Input input = container.getInput();
