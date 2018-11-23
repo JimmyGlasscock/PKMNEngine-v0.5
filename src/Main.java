@@ -23,6 +23,7 @@ public class Main extends BasicGame{
 	//-------------TO DO-------------------
 	//Add a prompt when the user tries to shift out a fainted pokemon
 	//make it so you can win/lose to any party size
+	//fix HP drain
 	
 	//enemy AI, (different difficulties of it)
 	//Make it so PKMN Stats are generated when you click on the PKMN, not just once at the start
