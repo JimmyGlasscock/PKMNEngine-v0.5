@@ -42,7 +42,8 @@ public class Pokemon {
 		type = newtype;
 		level = newlevel;
 		
-		isShiny = (((int)(Math.random() * 4096))+1);
+//		isShiny = (((int)(Math.random() * 4096))+1);
+		isShiny = 4096;
 		
 		HP = calculateHP(baseHP, newlevel);
 		MaxHP = HP;
@@ -62,7 +63,8 @@ public class Pokemon {
 		type2 = newtype2;
 		level = newlevel;
 		
-		isShiny = (((int)(Math.random() * 4096))+1);
+//		isShiny = (((int)(Math.random() * 4096))+1);
+		isShiny = 4096;
 		
 		HP = calculateHP(baseHP, newlevel);
 		MaxHP = HP;

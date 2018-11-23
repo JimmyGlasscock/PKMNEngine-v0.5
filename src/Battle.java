@@ -573,12 +573,13 @@ public class Battle {
 		
 		//------------------------------------------------
 		ArrayList<Pokemon> joeyParty = new ArrayList();
-		joeyParty.add(PokemonList.get(((int)(Math.random() * 151))+1));
-		joeyParty.add(PokemonList.get(((int)(Math.random() * 151))+1));
-		joeyParty.add(PokemonList.get(((int)(Math.random() * 151))+1));
-		joeyParty.add(PokemonList.get(((int)(Math.random() * 151))+1));
-		joeyParty.add(PokemonList.get(((int)(Math.random() * 151))+1));
-		joeyParty.add(PokemonList.get(((int)(Math.random() * 151))+1));
+		joeyParty.add(PokemonList.get(13));
+//		joeyParty.add(PokemonList.get(((int)(Math.random() * 151))+1));
+//		joeyParty.add(PokemonList.get(((int)(Math.random() * 151))+1));
+//		joeyParty.add(PokemonList.get(((int)(Math.random() * 151))+1));
+//		joeyParty.add(PokemonList.get(((int)(Math.random() * 151))+1));
+//		joeyParty.add(PokemonList.get(((int)(Math.random() * 151))+1));
+//		joeyParty.add(PokemonList.get(((int)(Math.random() * 151))+1));
 		Joey = new Opponent("Youngster Joey", joeyParty);
 	}
 	
