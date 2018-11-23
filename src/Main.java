@@ -42,7 +42,7 @@ public class Main extends BasicGame{
 	
 	static int screenWidth = 1280, screenHeight = 720;
 	
-	int trainerNum = 0, listNum = 1, partySize = 0, currentPKMN = 0, currentOpponentPKMN = 0, battleIndex = 1, alpha = 0, q = 0;
+	int trainerNum = 0, listNum = 1, partySize = 0, currentPKMN = 0, currentOpponentPKMN = 0, battleIndex = 1, alpha = 0, q = 0, z = 0;
 	
 	int screenIndex = 0, trainerIndex = 0, PlayerHPNum = 192, OpponentHPNum = 192;
 	
@@ -100,9 +100,6 @@ public class Main extends BasicGame{
 		drawLoss(g);
 		
 		//test case
-		g.drawString("switchingIn: " + switchingIn, 10, 0);
-		g.drawString("opponentScale: " + opponentScale, 10, 20);
-
 		
 		//always last (transitions)
 		increaseTwoScreenIndex(g);
@@ -583,9 +580,18 @@ public class Main extends BasicGame{
 			
 			//sets image to pokemon in first slot
 			trainerPokemon = battleObj.Player.getPokemonFromParty(currentPKMN).getBackSprite();
-			trainerPokemon.draw(pkmnX, pkmnY, scale);
 			
 			opponentPokemon = battleObj.Joey.getPokemonFromParty(currentOpponentPKMN).getFrontSprite();
+			
+			if(switching) {
+				trainerPokemon = trainerPokemon.getScaledCopy(scale);
+			}
+			
+			if(switching) {
+				trainerPokemon.drawFlash(pkmnX, pkmnY);
+			}else {
+				trainerPokemon.draw(pkmnX, pkmnY, scale);
+			}
 			
 			if(opponentSwitching) {
 				opponentPokemon = opponentPokemon.getScaledCopy(opponentScale);
@@ -683,6 +689,41 @@ public class Main extends BasicGame{
 //					}	
 //			}
 			
+			
+			if(switching) {
+				if(switchingIn) {
+					z = currentPKMN;
+					if(scale != 0) {
+						scale -= 0.5f;
+						if(scale<0) {
+							scale = 0;
+						}
+						pkmnX += 25;
+						pkmnY += 40;
+					}else {
+						switchingIn = false;
+					}
+				}
+
+			}
+			
+			if(switching) {
+				if(z != currentPKMN) {
+					if(!switchingIn && !(currentPKMN>battleObj.Player.PlayerParty.size())) {
+						if(scale != 3.5f) {
+							scale += 0.5f;
+							if(scale>3.5f) {
+								scale = 3.5f;
+							}
+							pkmnX-=25;
+							pkmnY-=40;
+					}else {
+						switchingIn = true;
+						switching = false;
+						}
+					}
+				}
+			}
 			
 			//BEGIN PKMN SWITCH ANIMATION
 			if(opponentSwitching) {
@@ -934,24 +975,30 @@ public class Main extends BasicGame{
 				battleObj.Player.PlayerParty.get(currentPKMN).setStatus("Fainted");
 				if(i==1) {
 					if((battleObj.Player.PlayerParty.get(0).getStatus().equalsIgnoreCase("Fainted"))) {
+						switching = true;
 						OpponentVictory = true;
 						screenIndex = 5;
 					}else {
 						backButtonEnabled = false;
+						switching = true;
 						nextScreen = true;
 					}
 				}
 				if(i==2) {
 					if((battleObj.Player.PlayerParty.get(0).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(1).getStatus().equalsIgnoreCase("Fainted"))) {
+						switching = true;
 						OpponentVictory = true;
 						screenIndex = 5;
 					}else {
 						backButtonEnabled = false;
+						switching = true;
 						nextScreen = true;
+						
 					}
 				}
 				if(i==3) {
 					if((battleObj.Player.PlayerParty.get(0).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(1).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(2).getStatus().equalsIgnoreCase("Fainted"))) {
+						switching = true;
 						OpponentVictory = true;
 						screenIndex = 5;
 					}else {
@@ -961,18 +1008,22 @@ public class Main extends BasicGame{
 				}
 				if(i==4) {
 					if((battleObj.Player.PlayerParty.get(0).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(1).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(2).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(3).getStatus().equalsIgnoreCase("Fainted"))) {
+						switching = true;
 						OpponentVictory = true;
 						screenIndex = 5;
 					}else {
+						switching = true;
 						backButtonEnabled = false;
 						nextScreen = true;
 					}
 				}
 				if(i==5) {
 					if((battleObj.Player.PlayerParty.get(0).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(1).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(2).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(3).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(4).getStatus().equalsIgnoreCase("Fainted"))) {
+						switching = true;
 						OpponentVictory = true;
 						screenIndex = 5;
 					}else {
+						switching = true;
 						backButtonEnabled = false;
 						nextScreen = true;
 					}
@@ -980,9 +1031,11 @@ public class Main extends BasicGame{
 				
 				if(i>5) {
 					if((battleObj.Player.PlayerParty.get(0).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(1).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(2).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(3).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(4).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Player.PlayerParty.get(5).getStatus().equalsIgnoreCase("Fainted"))) {
+						switching = true;
 						OpponentVictory = true;
 						screenIndex = 5;
 					}else {
+						switching = true;
 						backButtonEnabled = false;
 						nextScreen = true;
 					}
