@@ -27,6 +27,7 @@ public class Main extends BasicGame{
 	//Add next battle button - kicks you to teambuilder and resets joeyParty
 	
 	//rename and resize shiny backs 
+	//add shiny sparkles
 	//enemy AI, (different difficulties of it)
 	//Make it so PKMN Stats are generated when you click on the PKMN, not just once at the start
 	//Add moves to all pokemon
@@ -42,7 +43,7 @@ public class Main extends BasicGame{
 	
 	static int screenWidth = 1280, screenHeight = 720;
 	
-	int trainerNum = 0, listNum = 1, partySize = 0, currentPKMN = 0, currentOpponentPKMN = 0, battleIndex = 1, alpha = 0, q = 0, z = 0;
+	int trainerNum = 0, listNum = 1, partySize = 0, currentPKMN = 0, nextPKMN = 0, currentOpponentPKMN = 0, battleIndex = 1, alpha = 0, q = 0, z = 0;
 	
 	int screenIndex = 0, trainerIndex = 0, PlayerHPNum = 192, OpponentHPNum = 192;
 	
@@ -56,7 +57,7 @@ public class Main extends BasicGame{
 	
 	boolean changeHP = true, changeEnemyHP = true, setScale = true, PlayerVictory = false, OpponentVictory = false, backButtonEnabled = true, popupText = false;
 
-	boolean increaseTwo = false, nextScreen = false, previousScreen = false, opponentFaintMessage = false, opponentSwitching = false, switching = false, switchingIn = true;
+	boolean increaseTwo = false, nextScreen = false, previousScreen = false, opponentFaintMessage = false, opponentSwitching = false, switching = false, swapping= false, switchingIn = true, switchingIn2 = true;
 	
 	Image Title, Victory, Defeat, Trainer, pointer, PartyScreen, TeamBuilder, icon, icon2, icon3, icon4, icon5, icon6, icon7, icon8, icon9, fnt, fnt2, fnt3, fnt4, fnt5, fnt6;
 	
@@ -673,23 +674,7 @@ public class Main extends BasicGame{
 				changeHP = true;
 			}
 			
-			//BROKEN
-//			if(opponentFaintMessage) {
-//					battleIndex = -1;
-//					
-//					String str = "Foe " + battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getName() + " Fainted!";
-//					message = str.substring(0,i);
-//					sleep(30);
-//					i++;
-//					
-//					if(i>str.length()) {
-//						currentOpponentPKMN++;
-//						battleIndex = 1;
-//						opponentFaintMessage = false;
-//					}	
-//			}
-			
-			
+			//SWITCHING IF YOUR PKMN FAINTS
 			if(switching) {
 				if(switchingIn) {
 					z = currentPKMN;
@@ -724,6 +709,39 @@ public class Main extends BasicGame{
 					}
 				}
 			}
+			//END SWITCHING
+			
+			//Switching if you don't faint
+			if(swapping) {
+				if(switchingIn2) {
+					if(scale != 0) {
+						scale -= 0.5f;
+						if(scale<0) {
+							scale = 0;
+						}
+						pkmnX += 25;
+						pkmnY += 40;
+					}else {
+						currentPKMN = nextPKMN;
+						switchingIn2 = false;
+					}
+				}
+				if(!switchingIn2) {
+					if(scale != 3.5f) {
+						scale += 0.5f;
+						if(scale>3.5f) {
+							scale = 3.5f;
+						}
+						pkmnX-=25;
+						pkmnY-=40;
+				}else {
+					switchingIn2 = true;
+					swapping = false;
+					}
+				}
+			}
+			//End switching
+			
 			
 			//BEGIN PKMN SWITCH ANIMATION
 			if(opponentSwitching) {
@@ -1317,7 +1335,8 @@ public class Main extends BasicGame{
 //						noEnergyToFight(0);
 					}else {
 						choice = 0;
-						currentPKMN = 0;
+						nextPKMN = 0;
+						swapping = true;
 						previousScreen = true;
 					}
 				}
@@ -1330,7 +1349,8 @@ public class Main extends BasicGame{
 							//Popup that tells the player that <PKMN NAME> has no energy left to fight
 						}else {
 							choice = 0;
-							currentPKMN = 1;
+							nextPKMN = 1;
+							swapping = true;
 							previousScreen = true;
 						}
 					}
@@ -1344,7 +1364,8 @@ public class Main extends BasicGame{
 							//Popup that tells the player that <PKMN NAME> has no energy left to fight
 						}else {
 							choice = 0;
-							currentPKMN = 2;
+							nextPKMN = 2;
+							swapping = true;
 							previousScreen = true;
 						}
 					}
@@ -1357,7 +1378,8 @@ public class Main extends BasicGame{
 								//Popup that tells the player that <PKMN NAME> has no energy left to fight
 							}else {
 								choice = 0;
-								currentPKMN = 3;
+								nextPKMN = 3;
+								swapping = true;
 								previousScreen = true;
 							}
 						}
@@ -1370,7 +1392,8 @@ public class Main extends BasicGame{
 								//Popup that tells the player that <PKMN NAME> has no energy left to fight
 							}else {
 								choice = 0;
-								currentPKMN = 4;
+								nextPKMN = 4;
+								swapping = true;
 								previousScreen = true;
 							}
 						}
@@ -1383,7 +1406,8 @@ public class Main extends BasicGame{
 								//Popup that tells the player that <PKMN NAME> has no energy left to fight
 							}else {
 								choice = 0;
-								currentPKMN = 5;
+								nextPKMN = 5;
+								swapping = true;
 								previousScreen = true;
 							}
 						}
