@@ -17,14 +17,14 @@ import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
 
 /*---------------------------------------------------------
-   -----Created By Jimmy Glasscock - January 2018-----
+   -----Created By Jimmy Glasscock - December 2017-----
 ---------------------------------------------------------*/
 public class Main extends BasicGame{
 	//-------------TO DO-------------------
 	//Add a prompt when the user tries to shift out a fainted pokemon
-	//make it so you can win/lose to any party size
 	//fix HP drain
 	
+	//rename and resize shiny backs 
 	//enemy AI, (different difficulties of it)
 	//Make it so PKMN Stats are generated when you click on the PKMN, not just once at the start
 	//Add moves to all pokemon
@@ -36,7 +36,7 @@ public class Main extends BasicGame{
 	Font UIFont, UIFont2, UIFont3;
 	UnicodeFont uniFont, uniFont2, uniFont3;
 	
-	String move1, move2, move3, move4, message = "", faintedMessage = "Ligma";
+	String move1, move2, move3, move4, message = "", faintedMessage = "";
 	
 	static int screenWidth = 1280, screenHeight = 720;
 	
@@ -709,13 +709,59 @@ public class Main extends BasicGame{
 					if(message.length() != str.length()) {
 						message = battleObj.printMessage("Foe " + battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getName() + " Fainted!");
 					}else{
-						//you need to check party size to avoid out of bounds with less than 6
-						if((battleObj.Joey.EnemyParty.get(0).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(1).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(2).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(3).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(4).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(5).getStatus().equalsIgnoreCase("Fainted"))) {
-							PlayerVictory = true;
-							increaseTwo = true;
-						}else {
-							battleObj.sleep(500);
-							battleIndex--;
+						if(battleObj.Joey.EnemyParty.size()==1) {
+							if((battleObj.Joey.EnemyParty.get(0).getStatus().equalsIgnoreCase("Fainted"))) {
+								PlayerVictory = true;
+								increaseTwo = true;
+							}else {
+								battleObj.sleep(500);
+								battleIndex--;
+							}
+						}
+						if(battleObj.Joey.EnemyParty.size()==2) {
+							if((battleObj.Joey.EnemyParty.get(0).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(1).getStatus().equalsIgnoreCase("Fainted"))) {
+								PlayerVictory = true;
+								increaseTwo = true;
+							}else {
+								battleObj.sleep(500);
+								battleIndex--;
+							}
+						}
+						if(battleObj.Joey.EnemyParty.size()==3) {
+							if((battleObj.Joey.EnemyParty.get(0).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(1).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(2).getStatus().equalsIgnoreCase("Fainted"))) {
+								PlayerVictory = true;
+								increaseTwo = true;
+							}else {
+								battleObj.sleep(500);
+								battleIndex--;
+							}
+						}
+						if(battleObj.Joey.EnemyParty.size()==4) {
+							if((battleObj.Joey.EnemyParty.get(0).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(1).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(2).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(3).getStatus().equalsIgnoreCase("Fainted"))) {
+								PlayerVictory = true;
+								increaseTwo = true;
+							}else {
+								battleObj.sleep(500);
+								battleIndex--;
+							}
+						}
+						if(battleObj.Joey.EnemyParty.size()==5) {
+							if((battleObj.Joey.EnemyParty.get(0).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(1).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(2).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(3).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(4).getStatus().equalsIgnoreCase("Fainted"))) {
+								PlayerVictory = true;
+								increaseTwo = true;
+							}else {
+								battleObj.sleep(500);
+								battleIndex--;
+							}
+						}
+						if(battleObj.Joey.EnemyParty.size()>5) {
+							if((battleObj.Joey.EnemyParty.get(0).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(1).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(2).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(3).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(4).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(5).getStatus().equalsIgnoreCase("Fainted"))) {
+								PlayerVictory = true;
+								increaseTwo = true;
+							}else {
+								battleObj.sleep(500);
+								battleIndex--;
+							}
 						}
 						
 					}					
