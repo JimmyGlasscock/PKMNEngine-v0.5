@@ -24,6 +24,8 @@ public class Main extends BasicGame{
 	//Add a prompt when the user tries to shift out a fainted pokemon
 	//fix HP drain
 	
+	//Add next battle button - kicks you to teambuilder and resets joeyParty
+	
 	//rename and resize shiny backs 
 	//enemy AI, (different difficulties of it)
 	//Make it so PKMN Stats are generated when you click on the PKMN, not just once at the start
@@ -50,11 +52,11 @@ public class Main extends BasicGame{
 	
 	int pkmnX = 180, pkmnY = 315, oppoX = 820, oppoY = 110, tempPKMN = 0, moveMessage = 0;
 	
-	float scale = 3.5f;
+	float scale = 3.5f, opponentScale = 3.5f;
 	
 	boolean changeHP = true, changeEnemyHP = true, setScale = true, PlayerVictory = false, OpponentVictory = false, backButtonEnabled = true, popupText = false;
 
-	boolean increaseTwo = false, nextScreen = false, previousScreen = false, opponentFaintMessage = false;
+	boolean increaseTwo = false, nextScreen = false, previousScreen = false, opponentFaintMessage = false, opponentSwitching = false, switching = false, switchingIn = true;
 	
 	Image Title, Victory, Defeat, Trainer, pointer, PartyScreen, TeamBuilder, icon, icon2, icon3, icon4, icon5, icon6, icon7, icon8, icon9, fnt, fnt2, fnt3, fnt4, fnt5, fnt6;
 	
@@ -98,7 +100,8 @@ public class Main extends BasicGame{
 		drawLoss(g);
 		
 		//test case
-		//g.drawString("isShiny: " + battleObj.PokemonList.get(0).isShiny, 10, 0);
+		g.drawString("switchingIn: " + switchingIn, 10, 0);
+		g.drawString("opponentScale: " + opponentScale, 10, 20);
 
 		
 		//always last (transitions)
@@ -583,7 +586,16 @@ public class Main extends BasicGame{
 			trainerPokemon.draw(pkmnX, pkmnY, scale);
 			
 			opponentPokemon = battleObj.Joey.getPokemonFromParty(currentOpponentPKMN).getFrontSprite();
-			opponentPokemon.draw(oppoX, oppoY, scale);
+			
+			if(opponentSwitching) {
+				opponentPokemon = opponentPokemon.getScaledCopy(opponentScale);
+			}
+			
+			if(opponentSwitching) {
+				opponentPokemon.drawFlash(oppoX, oppoY);
+			}else {
+				opponentPokemon.draw(oppoX, oppoY, opponentScale);	
+			}
 			
 			g.setColor(Color.black);
 			g.drawString(battleObj.getFromPlayerParty(currentPKMN).getName(), 1000, 438);
@@ -671,6 +683,39 @@ public class Main extends BasicGame{
 //					}	
 //			}
 			
+			
+			//BEGIN PKMN SWITCH ANIMATION
+			if(opponentSwitching) {
+				if(switchingIn) {
+					if(opponentScale != 0) {
+						opponentScale -= 0.5f;
+						if(opponentScale<0) {
+							opponentScale = 0;
+						}
+						oppoX += 25;
+						oppoY += 28;
+					}else {
+						if(currentOpponentPKMN < battleObj.Joey.EnemyParty.size()-1) {
+							currentOpponentPKMN++;
+							switchingIn = false;
+						}
+					}
+				}else if(!switchingIn && !(currentOpponentPKMN>battleObj.Joey.EnemyParty.size())){
+					if(opponentScale < 3.5f) {
+						opponentScale += 0.5f;
+						if(opponentScale>3.5f) {
+							opponentScale = 3.5f;
+						}
+						oppoX -= 25;
+						oppoY -= 28;
+					}else {
+						switchingIn = true;
+						opponentSwitching = false;
+					}
+				}
+			}
+			//END PKMN SWITCH ANIMATION
+			
 			if(battleObj.PokemonList.get(1).getGen().equals("Gen4")) {
 				if(setScale) {
 					pkmnX = 180;
@@ -678,6 +723,7 @@ public class Main extends BasicGame{
 					oppoX = 820;
 					oppoY = 110;
 					scale = 3.5f;
+					opponentScale = scale;
 					setScale = false;
 				}
 			}
@@ -689,17 +735,17 @@ public class Main extends BasicGame{
 					oppoX = 820;
 					oppoY = 140;
 					scale = 4.0f;
+					opponentScale = scale;
 					setScale = false;
 				}
 			}
 			
 			if(battleIndex == -2) {
-				String str = "Opponent sent out " + battleObj.Joey.EnemyParty.get(currentOpponentPKMN+1).getName() +"!";
+				String str = "Opponent sent out " + battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getName() +"!";
 				if(message.length() != str.length()) {
-					message = battleObj.printMessage("Opponent sent out " + battleObj.Joey.EnemyParty.get(currentOpponentPKMN+1).getName() +"!");
+					message = battleObj.printMessage("Opponent sent out " + battleObj.Joey.EnemyParty.get(currentOpponentPKMN).getName() +"!");
 				}else {
 					battleObj.sleep(500);
-					currentOpponentPKMN++;
 					battleIndex = 1;
 				}
 			}
@@ -715,6 +761,7 @@ public class Main extends BasicGame{
 								increaseTwo = true;
 							}else {
 								battleObj.sleep(500);
+								opponentSwitching = true;
 								battleIndex--;
 							}
 						}
@@ -724,6 +771,7 @@ public class Main extends BasicGame{
 								increaseTwo = true;
 							}else {
 								battleObj.sleep(500);
+								opponentSwitching = true;
 								battleIndex--;
 							}
 						}
@@ -733,6 +781,7 @@ public class Main extends BasicGame{
 								increaseTwo = true;
 							}else {
 								battleObj.sleep(500);
+								opponentSwitching = true;
 								battleIndex--;
 							}
 						}
@@ -742,6 +791,7 @@ public class Main extends BasicGame{
 								increaseTwo = true;
 							}else {
 								battleObj.sleep(500);
+								opponentSwitching = true;
 								battleIndex--;
 							}
 						}
@@ -751,15 +801,18 @@ public class Main extends BasicGame{
 								increaseTwo = true;
 							}else {
 								battleObj.sleep(500);
+								opponentSwitching = true;
 								battleIndex--;
 							}
 						}
 						if(battleObj.Joey.EnemyParty.size()>5) {
 							if((battleObj.Joey.EnemyParty.get(0).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(1).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(2).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(3).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(4).getStatus().equalsIgnoreCase("Fainted"))&&(battleObj.Joey.EnemyParty.get(5).getStatus().equalsIgnoreCase("Fainted"))) {
+								opponentSwitching = true;
 								PlayerVictory = true;
 								increaseTwo = true;
 							}else {
 								battleObj.sleep(500);
+								opponentSwitching = true;
 								battleIndex--;
 							}
 						}
@@ -1393,7 +1446,6 @@ public class Main extends BasicGame{
 			}
 		}
 	}
-	
 	
 	public void drawVictory(Graphics g){
 		if(screenIndex == 4) {
